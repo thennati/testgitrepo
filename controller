@@ -1,0 +1,22 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping("/api/kafka")
+public class KafkaController {
+
+    @Autowired
+    private KafkaAdminService kafkaAdminService;
+
+    @PostMapping("/createTopic")
+    public String createTopic(@RequestParam String topicName, @RequestParam int partitions, @RequestParam short replicationFactor) {
+        try {
+            kafkaAdminService.createTopic(topicName, partitions, replicationFactor);
+            return "Topic created successfully";
+        } catch (ExecutionException | InterruptedException e) {
+            return "Failed to create topic: " + e.getMessage();
+        }
+    }
+}
